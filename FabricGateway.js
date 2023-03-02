@@ -12,7 +12,8 @@ module.exports = {
     transferToken,
     getAccountId,
     mintToken,
-    getUserTransfers
+    getUserTransfers,
+    getTransfer
 }
 
 async function startGateway(userCerts) {
@@ -78,6 +79,17 @@ async function getUserTransfers(gateway) {
             result.push(transfer)
         }
         return result
+    } catch(er) {
+        throw er
+    }
+}
+
+async function getTransfer(gateway, txId) {
+    const network = gateway.getNetwork("mychannel")
+    const contract = network.getContract(vaultName)
+    try {
+        const transfer = JSON.parse(utfDecode.decode(await contract.evaluateTransaction("getTransfer", txId)))
+        return transfer
     } catch(er) {
         throw er
     }
