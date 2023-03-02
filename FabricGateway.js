@@ -4,14 +4,15 @@ const crypto = require('crypto')
 const utfDecode = new TextDecoder()
 const config = require('./configGateway.json')
 
-const vaultName = "vault1"
+const vaultName = "vault2"
 
 module.exports = {
     startGateway,
     newTransfer,
     transferToken,
     getAccountId,
-    mintToken
+    mintToken,
+    getUserTransfers
 }
 
 async function startGateway(userCerts) {
@@ -63,6 +64,23 @@ async function mintToken(gateway, tokenType, amount) {
         arguments: [String(amount)]
     })
     return utfDecode.decode(transaction.getResult())
+}
+
+async function getUserTransfers(gateway) {
+    try {
+        var result = []
+        const network = gateway.getNetwork("mychannel")
+        const contract = network.getContract(vaultName)
+        const userTransfersId = JSON.parse(utfDecode.decode(await contract.evaluateTransaction("getUserTransfersId")))
+        
+        for(var i = 0; i < userTransfersId.transfers.length; i++) {
+            var transfer = JSON.parse(utfDecode.decode(await contract.evaluateTransaction("getTransfer", userTransfersId.transfers[i])))
+            result.push(transfer)
+        }
+        return result
+    } catch(er) {
+        throw er
+    }
 }
 
 

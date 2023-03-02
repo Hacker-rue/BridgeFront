@@ -8,10 +8,13 @@ async function main() {
     // console.log(user)
     const gateway = await fabricGateway.startGateway(user)
 
-    var txIdTransferToken = await fabricGateway.transferToken(gateway, "mychannel", "erc20", releAddr, 200)
-    console.log(txIdTransferToken)
-    var txIdVault = await fabricGateway.newTransfer(gateway, "mychannel", "0:b4c75cf26c4dfb8935325d72578b8a61afd7057fcdce0cd5d872e8a00f0e1772", 200, "erc20", txIdTransferToken)
-    console.log(txIdVault)
+    // var txIdTransferToken = await fabricGateway.transferToken(gateway, "mychannel", "erc20", releAddr, 200)
+    // console.log(txIdTransferToken)
+    // var txIdVault = await fabricGateway.newTransfer(gateway, "mychannel", "0:b4c75cf26c4dfb8935325d72578b8a61afd7057fcdce0cd5d872e8a00f0e1772", 200, "erc20", txIdTransferToken)
+    // console.log(txIdVault)
+
+    var transfers = await fabricGateway.getUserTransfers(gateway)
+    console.log(transfers)
 
 }
 
